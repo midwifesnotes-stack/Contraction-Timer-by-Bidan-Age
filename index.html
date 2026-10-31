@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Contraction Timer by Bidan Age</title>
+<meta name="description" content="Tenang, Catat, Pantau. Alat bantu mencatat kontraksi menjelang persalinan — oleh Bidan Age @yourmidwifes.">
+<meta name="theme-color" content="#FFF9F3">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Kontraksi">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FFF9F3; --pink:#E8B9BE; --sage:#A9B9A3; --rose:#B97883; --brown:#51423D; --white:#FFFFFF;
+  --bg:var(--cream); --surface:var(--white); --surface-2:#FBEFEA; --text:var(--brown); --muted:#8A7570;
+  --line:#EFDCD6; --accent:var(--rose); --accent-soft:#F6E1E3; --sage-soft:#E7EEE4; --danger:#A8434F; --danger-soft:#FBE7E8;
+  --shadow:0 6px 24px rgba(81,66,61,.08); --radius:20px;
+  --font-head:'Fraunces',Georgia,serif; --font-body:'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --nav-h:68px;
+}
+[data-theme="dark"]{
+  --bg:#231C1A; --surface:#30272A; --surface-2:#3A2F31; --text:#F5EBE4; --muted:#BFAEA8; --line:#4A3D3E;
+  --accent:#D99AA5; --accent-soft:#4A3238; --sage-soft:#2F3A2E; --danger:#F08C97; --danger-soft:#4A2A2F;
+  --shadow:0 6px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:16px;line-height:1.55;
+  min-height:100vh;transition:background .3s,color .3s}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--accent)}
+h1,h2,h3{font-family:var(--font-head);font-weight:600;line-height:1.2;margin:0 0 .5rem}
+h1{font-size:1.65rem} h2{font-size:1.35rem} h3{font-size:1.08rem}
+p{margin:0 0 .75rem}
+.app{max-width:560px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 8px) 18px calc(var(--nav-h) + env(safe-area-inset-bottom) + 24px)}
+/* Header */
+.topbar{display:flex;align-items:center;gap:10px;padding:8px 0 14px}
+.topbar .brand{display:flex;align-items:center;gap:10px;flex:1;min-width:0;text-decoration:none;color:inherit}
+.topbar .brand b{font-family:var(--font-head);font-weight:600;font-size:1.02rem;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar .brand small{display:block;color:var(--muted);font-size:.78rem}
+.logo{width:40px;height:40px;flex:none}
+.iconbtn{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;cursor:pointer;flex:none}
+.iconbtn svg{width:20px;height:20px}
+/* Views */
+.view{display:none;animation:fade .25s ease}
+.view.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.card{background:var(--surface);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);margin-bottom:14px;border:1px solid var(--line)}
+.card.soft{background:var(--surface-2);box-shadow:none}
+.card.sage{background:var(--sage-soft);box-shadow:none;border-color:transparent}
+.card.danger{background:var(--danger-soft);border-color:transparent;box-shadow:none}
+.card.danger h3,.card.danger strong{color:var(--danger)}
+.muted{color:var(--muted)} .small{font-size:.86rem} .center{text-align:center}
+.eyebrow{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:var(--accent);margin-bottom:6px}
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:999px;padding:13px 20px;
+  font-weight:800;cursor:pointer;text-decoration:none;transition:transform .1s,filter .2s,background .2s;font-size:.98rem;min-height:48px}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--rose);color:#fff;box-shadow:0 8px 20px rgba(185,120,131,.35)}
+[data-theme="dark"] .btn.primary{background:#C4808C}
+.btn.secondary{background:var(--surface);color:var(--text);border:1.5px solid var(--line)}
+.btn.sage{background:var(--sage);color:#2F3A2C}
+.btn.ghost{background:transparent;color:var(--accent);padding:10px 12px;min-height:40px}
+.btn.danger{background:var(--danger);color:#fff}
+.btn.danger-outline{background:transparent;color:var(--danger);border:1.5px solid currentColor}
+.btn.block{width:100%}
+.btn.sm{padding:9px 14px;min-height:40px;font-size:.88rem}
+.btn svg{width:18px;height:18px;flex:none}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row > .btn{flex:1 1 140px}
+.stack > * + *{margin-top:10px}
+/* Home */
+.hero{text-align:center;padding:6px 4px 4px}
+.hero svg.illus{width:100%;max-width:340px;height:auto;display:block;margin:0 auto 8px}
+.hero h1{margin-top:4px}
+.tagline{font-family:var(--font-head);font-style:italic;color:var(--accent);font-size:1.02rem;margin-bottom:12px}
+.quick{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.quick a{display:block;text-decoration:none;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:var(--shadow)}
+.quick a b{display:block;font-size:.95rem}
+.quick a span{font-size:.8rem;color:var(--muted)}
+.quick .qi{width:34px;height:34px;border-radius:12px;display:grid;place-items:center;margin-bottom:8px;background:var(--accent-soft)}
+.quick .qi.s{background:var(--sage-soft)} .quick .qi.d{background:var(--danger-soft)}
+.quick .qi svg{width:18px;height:18px}
+.disclaimer{font-size:.82rem;color:var(--muted);border-left:3px solid var(--pink);padding:8px 12px;background:var(--surface-2);border-radius:0 12px 12px 0}
+.signature{text-align:center;font-family:var(--font-head);font-style:italic;color:var(--muted);font-size:.9rem;margin:22px 0 6px}
+/* Timer */
+.clockline{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.clock{font-variant-numeric:tabular-nums;font-weight:800;font-size:1.05rem}
+.ringwrap{position:relative;width:min(78vw,280px);aspect-ratio:1;margin:8px auto 14px}
+.ringwrap svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring-bg{stroke:var(--accent-soft)} .ring-fg{stroke:var(--rose);transition:stroke-dashoffset .25s linear}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px}
+.ring-center .big{font-variant-numeric:tabular-nums;font-weight:800;font-size:clamp(2.6rem,13vw,3.4rem);letter-spacing:-.02em;line-height:1}
+.ring-center .lbl{font-size:.82rem;color:var(--muted);margin-top:6px}
+.status-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;font-size:.78rem;font-weight:800;background:var(--sage-soft);color:var(--text)}
+.status-pill .dot{width:8px;height:8px;border-radius:50%;background:var(--sage)}
+.status-pill.on{background:var(--accent-soft)} .status-pill.on .dot{background:var(--rose);animation:pulse 1.2s infinite}
+@keyframes pulse{50%{opacity:.3}}
+.bigbtn{width:100%;border:none;border-radius:24px;padding:20px;cursor:pointer;font-weight:800;font-size:1.15rem;letter-spacing:.04em;
+  display:flex;flex-direction:column;align-items:center;gap:2px;transition:transform .1s,background .25s;min-height:84px}
+.bigbtn:active{transform:scale(.98)}
+.bigbtn small{font-weight:600;letter-spacing:0;font-size:.85rem;opacity:.9}
+.bigbtn.start{background:var(--rose);color:#fff;box-shadow:0 10px 26px rgba(185,120,131,.4)}
+.bigbtn.stop{background:var(--brown);color:#fff;box-shadow:0 10px 26px rgba(81,66,61,.35)}
+[data-theme="dark"] .bigbtn.stop{background:#F5EBE4;color:#231C1A}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 0}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px}
+.stat .k{font-size:.76rem;color:var(--muted);font-weight:700}
+.stat .v{font-size:1.15rem;font-weight:800;font-variant-numeric:tabular-nums}
+.intensity{display:flex;gap:8px;margin-top:10px}
+.intensity button{flex:1;border:1.5px solid var(--line);background:var(--surface);border-radius:14px;padding:10px 6px;cursor:pointer;font-weight:700;font-size:.88rem}
+.intensity button.sel{border-color:var(--rose);background:var(--accent-soft)}
+/* History */
+.seg{display:flex;background:var(--surface-2);border-radius:999px;padding:4px;margin-bottom:14px}
+.seg button{flex:1;border:none;background:transparent;padding:10px;border-radius:999px;font-weight:800;cursor:pointer;color:var(--muted)}
+.seg button.on{background:var(--surface);color:var(--text);box-shadow:var(--shadow)}
+.hlist{list-style:none;margin:0;padding:0}
+.hhead,.hitem{display:grid;grid-template-columns:38px 1.3fr 1fr 1fr 34px;gap:8px;align-items:center}
+.hhead{font-size:.72rem;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:0 10px 6px}
+.hitem{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:10px;margin-bottom:8px;font-variant-numeric:tabular-nums}
+.hitem .no{width:34px;height:34px;border-radius:12px;display:grid;place-items:center;font-weight:800;font-size:.9rem;color:#fff}
+.hitem .t{font-weight:700;font-size:.92rem;line-height:1.25}
+.hitem .t small{display:block;color:var(--muted);font-weight:600;font-size:.78rem}
+.hitem .d,.hitem .i{font-weight:800;font-size:.9rem;line-height:1.25}
+.hitem .tags{grid-column:2 / 5;display:flex;gap:6px;flex-wrap:wrap;margin-top:-2px}
+.tag{font-size:.7rem;font-weight:800;padding:2px 8px;border-radius:999px;background:var(--surface-2)}
+.lvl-1{background:var(--sage)} .lvl-2{background:#D49AA2} .lvl-3{background:var(--rose)}
+.tag.lvl-1{background:var(--sage-soft)} .tag.lvl-2,.tag.lvl-3{background:var(--accent-soft)}
+.del{width:34px;height:34px;border-radius:10px;border:none;background:transparent;cursor:pointer;color:var(--muted);display:grid;place-items:center}
+.del:hover{background:var(--danger-soft);color:var(--danger)}
+.del svg{width:18px;height:18px}
+.empty{text-align:center;padding:30px 10px;color:var(--muted)}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:.78rem;color:var(--muted);margin:4px 0 12px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:4px;margin-right:5px;vertical-align:-1px}
+select.sel{width:100%;padding:11px 14px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);font-weight:700}
+.chartbox{position:relative;height:270px;touch-action:pan-y}
+.chartbox svg{display:block;width:100%;height:100%;overflow:visible}
+.chartbox .ax{font-size:10px;fill:var(--muted);font-family:var(--font-body)}
+.chartbox .grid{stroke:var(--line);stroke-width:1}
+.ctip{position:absolute;top:4px;pointer-events:none;background:var(--brown);color:#fff;border-radius:12px;padding:8px 10px;font-size:.78rem;line-height:1.35;white-space:nowrap;box-shadow:0 6px 16px rgba(0,0,0,.2);transform:translateX(-50%);display:none;z-index:2}
+[data-theme="dark"] .ctip{background:#F5EBE4;color:#231C1A}
+.ctip b{display:block}
+/* Education */
+.compare{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:520px){.compare{grid-template-columns:1fr 1fr}}
+ul.clean{margin:0;padding-left:1.1rem} ul.clean li{margin-bottom:6px}
+.checklist{list-style:none;padding:0;margin:0}
+.checklist li{display:flex;gap:10px;align-items:flex-start;margin-bottom:9px}
+.checklist li svg{flex:none;width:20px;height:20px;margin-top:2px}
+details{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:0 16px;margin-bottom:10px}
+details summary{cursor:pointer;font-weight:800;padding:14px 0;list-style:none;display:flex;justify-content:space-between;align-items:center}
+details summary::-webkit-details-marker{display:none}
+details summary::after{content:'+';font-size:1.3rem;color:var(--accent)}
+details[open] summary::after{content:'–'}
+details > div{padding-bottom:14px}
+/* Ayah */
+.steps{list-style:none;padding:0;margin:0;counter-reset:s}
+.steps li{display:flex;gap:12px;margin-bottom:12px;align-items:flex-start}
+.steps li::before{counter-increment:s;content:counter(s);flex:none;width:32px;height:32px;border-radius:50%;background:var(--rose);color:#fff;display:grid;place-items:center;font-weight:800}
+.steps li b{display:block}
+.bag label{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px dashed var(--line);cursor:pointer}
+.bag label:last-child{border-bottom:none}
+.bag input{width:22px;height:22px;accent-color:var(--rose);flex:none}
+.bag input:checked + span{text-decoration:line-through;color:var(--muted)}
+.progress{height:8px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin:8px 0 4px}
+.progress > i{display:block;height:100%;background:var(--sage);border-radius:99px;transition:width .3s}
+/* Profile/forms */
+.field{margin-bottom:12px}
+.field label{display:block;font-weight:800;font-size:.86rem;margin-bottom:5px}
+.field input{width:100%;padding:12px 14px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);outline:none}
+.field input:focus{border-color:var(--rose)}
+.switch{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.switch:last-child{border-bottom:none}
+.switch span b{display:block} .switch span small{color:var(--muted)}
+.toggle{position:relative;width:52px;height:30px;flex:none}
+.toggle input{opacity:0;width:0;height:0;position:absolute}
+.toggle i{position:absolute;inset:0;background:var(--line);border-radius:99px;transition:.2s;cursor:pointer}
+.toggle i::after{content:'';position:absolute;width:24px;height:24px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 2px 4px rgba(0,0,0,.2)}
+.toggle input:checked + i{background:var(--rose)}
+.toggle input:checked + i::after{transform:translateX(22px)}
+.toggle input:focus-visible + i{outline:2px solid var(--rose);outline-offset:2px}
+/* Contact */
+.contact-box{display:flex;flex-direction:column;gap:8px}
+.contact-num{font-weight:800;font-size:1.05rem;font-variant-numeric:tabular-nums}
+/* Bottom nav */
+.bnav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+.bnav .inner{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);height:var(--nav-h)}
+.bnav a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-decoration:none;color:var(--muted);font-size:.72rem;font-weight:800;position:relative}
+.bnav a svg{width:23px;height:23px}
+.bnav a.on{color:var(--accent)}
+.bnav a.on::before{content:'';position:absolute;top:6px;width:44px;height:30px;border-radius:99px;background:var(--accent-soft);z-index:-1}
+.bnav a .badge{position:absolute;top:8px;right:calc(50% - 20px);width:9px;height:9px;border-radius:50%;background:var(--rose);border:2px solid var(--surface);display:none}
+.bnav a .badge.show{display:block;animation:pulse 1.2s infinite}
+/* Modal & toast */
+.modal{position:fixed;inset:0;z-index:50;background:rgba(40,30,28,.45);display:none;align-items:flex-end;justify-content:center;padding:16px}
+.modal.open{display:flex}
+@media(min-width:600px){.modal{align-items:center}}
+.sheet{background:var(--surface);border-radius:24px;padding:22px;width:100%;max-width:480px;max-height:85vh;overflow:auto;animation:up .22s ease;box-shadow:0 20px 50px rgba(0,0,0,.25)}
+@keyframes up{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+.sheet textarea{width:100%;min-height:180px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface-2);padding:12px;font-family:ui-monospace,Menlo,monospace;font-size:.78rem;resize:vertical}
+.sheet .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.sheet .actions .btn{flex:1 1 130px}
+.toast{position:fixed;left:50%;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom) + 14px);transform:translateX(-50%) translateY(20px);z-index:60;
+  background:var(--brown);color:#fff;padding:12px 16px;border-radius:16px;font-size:.9rem;font-weight:700;display:flex;gap:12px;align-items:center;
+  opacity:0;pointer-events:none;transition:.25s;max-width:calc(100% - 32px);box-shadow:0 10px 30px rgba(0,0,0,.25)}
+[data-theme="dark"] .toast{background:#F5EBE4;color:#231C1A}
+.toast.show{opacity:1;transform:translateX(-50%);pointer-events:auto}
+.toast button{background:transparent;border:none;color:var(--pink);font-weight:800;cursor:pointer;padding:4px 6px}
+[data-theme="dark"] .toast button{color:var(--rose)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+:focus-visible{outline:2.5px solid var(--rose);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <a class="brand" href="#beranda" aria-label="Beranda">
+      <svg class="logo" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="26" r="18" fill="#E8B9BE"/><circle cx="24" cy="26" r="18" fill="none" stroke="#B97883" stroke-width="2.5"/><rect x="20" y="3" width="8" height="5" rx="2" fill="#B97883"/><path d="M24 34.5c-5-3.6-8-6.3-8-9.4 0-2.3 1.8-4.1 4-4.1 1.6 0 3 .9 4 2.3 1-1.4 2.4-2.3 4-2.3 2.2 0 4 1.8 4 4.1 0 3.1-3 5.8-8 9.4z" fill="#fff"/></svg>
+      <span><b>Contraction Timer</b><small>by Bidan Age · @yourmidwifes</small></span>
+    </a>
+    <button class="iconbtn" id="themeBtn" aria-label="Mode malam" title="Mode malam"></button>
+  </header>
+
+  <!-- ===================== BERANDA ===================== -->
+  <section class="view" id="v-beranda" aria-label="Beranda">
+    <div class="hero">
+      <svg class="illus" viewBox="0 0 340 250" role="img" aria-label="Ilustrasi ibu hamil didampingi suami">
+        <ellipse cx="170" cy="140" rx="150" ry="105" fill="#F6E1E3"/>
+        <circle cx="62" cy="62" r="22" fill="#E7EEE4"/><circle cx="292" cy="78" r="14" fill="#E7EEE4"/>
+        <path d="M268 48c-4-3-7-5.5-7-8.2 0-2 1.6-3.6 3.5-3.6 1.4 0 2.6.8 3.5 2 .9-1.2 2.1-2 3.5-2 1.9 0 3.5 1.6 3.5 3.6 0 2.7-3 5.2-7 8.2z" fill="#B97883"/>
+        <path d="M78 110c-3-2.2-5-4-5-6 0-1.5 1.2-2.6 2.6-2.6 1 0 1.9.6 2.4 1.4.6-.8 1.4-1.4 2.4-1.4 1.4 0 2.6 1.1 2.6 2.6 0 2-2 3.8-5 6z" fill="#D49AA2"/>
+        <!-- suami -->
+        <path d="M96 248c0-60 8-112 46-120 30-6 46 20 48 52l2 68z" fill="#A9B9A3"/>
+        <rect x="132" y="104" width="18" height="22" rx="8" fill="#E9C3B2"/>
+        <circle cx="141" cy="84" r="25" fill="#F1D2C2"/>
+        <path d="M115 82c-2-20 14-32 30-30 16 1 24 13 21 27-6-8-16-11-27-10-9 1-17 6-24 13z" fill="#51423D"/>
+        <circle cx="150" cy="88" r="2.2" fill="#51423D"/>
+        <path d="M152 97c-3 2-6 2-8 0" stroke="#B97883" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <!-- ibu -->
+        <path d="M176 248l6-62c-6-28 0-60 22-66 20-5 30 10 32 28 22 8 34 30 30 54-2 14-10 24-22 28l4 18z" fill="#B97883"/>
+        <path d="M236 148c22 8 34 30 30 54-2 14-10 24-22 28-14 4-26-4-28-20-3-24 4-52 20-62z" fill="#C88E98"/>
+        <rect x="205" y="98" width="16" height="22" rx="7" fill="#E9C3B2"/>
+        <circle cx="214" cy="80" r="23" fill="#F1D2C2"/>
+        <path d="M190 84c-4-22 12-36 28-34 15 2 22 14 20 26-4-7-11-11-19-11-10 0-19 8-29 19z" fill="#6B544D"/>
+        <circle cx="236" cy="58" r="11" fill="#6B544D"/>
+        <circle cx="224" cy="84" r="2.1" fill="#51423D"/>
+        <path d="M225 93c-2.5 1.8-5 1.8-7 0" stroke="#B97883" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <circle cx="228" cy="90" r="4" fill="#E8B9BE" opacity=".7"/>
+        <!-- tangan -->
+        <path d="M168 150c18 10 40 22 64 28" stroke="#F1D2C2" stroke-width="12" stroke-linecap="round" fill="none"/>
+        <path d="M206 132c10 20 24 34 42 40" stroke="#E9C3B2" stroke-width="11" stroke-linecap="round" fill="none"/>
+        <path d="M250 196c-4-3-7-5.5-7-8.2 0-2 1.6-3.6 3.5-3.6 1.4 0 2.6.8 3.5 2 .9-1.2 2.1-2 3.5-2 1.9 0 3.5 1.6 3.5 3.6 0 2.7-3 5.2-7 8.2z" fill="#fff" opacity=".9"/>
+      </svg>
+      <div class="eyebrow">Contraction Timer by Bidan Age</div>
+      <h1>Halo Bunda! Sudah mulai merasakan kontraksi?</h1>
+      <p class="tagline">"Tenang, Catat, Pantau. Bidan Age Temani Persiapan Persalinanmu."</p>
+      <p class="muted">Catat kapan kontraksi mulai dan selesai hanya dengan satu tombol. Aplikasi menghitung durasi, interval, dan pola kontraksi secara otomatis — siap dibagikan ke bidan.</p>
+    </div>
+    <div class="card soft" id="homeStatus" hidden></div>
+    <div class="stack" style="margin:14px 0 18px">
+      <a class="btn primary block" href="#timer" id="homeStart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M10 2h4"/></svg>
+        MULAI HITUNG KONTRAKSI</a>
+      <a class="btn secondary block" href="#edukasi">Pelajari Kontraksi</a>
+    </div>
+    <div class="quick">
+      <a href="#ayah"><div class="qi s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="7" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg></div><b>Untuk Ayah</b><span>Tugas penting pendamping</span></a>
+      <a href="#tanda-bahaya"><div class="qi d"><svg viewBox="0 0 24 24" fill="none" stroke="#A8434F" stroke-width="2.2" stroke-linecap="round"><path d="M12 3l9.5 17h-19z"/><path d="M12 10v4M12 17.5v.1"/></svg></div><b>Tanda Bahaya</b><span>Kapan harus ke faskes</span></a>
+    </div>
+    <p class="disclaimer"><strong>Penting:</strong> Aplikasi ini adalah alat bantu pencatat kontraksi, <u>bukan</u> alat diagnosis medis. Aplikasi tidak dapat memastikan waktu persalinan maupun pembukaan serviks. Selalu ikuti arahan bidan atau dokter Anda.</p>
+    <p class="signature">With love, Bidan Age — @yourmidwifes</p>
+  </section>
+
+  <!-- ===================== TIMER ===================== -->
+  <section class="view" id="v-timer" aria-label="Timer kontraksi">
+    <div class="card" id="tipsCard" hidden>
+      <div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start">
+        <h3>Cara pakai singkat</h3>
+        <button class="btn ghost sm" id="tipsClose" style="margin:-8px -8px 0 0">Tutup</button>
+      </div>
+      <ol class="small" style="margin:0;padding-left:1.1rem">
+        <li>Tekan <b>START</b> saat perut mulai terasa kencang.</li>
+        <li>Tekan <b>STOP</b> saat kencangnya mereda.</li>
+        <li>Ulangi tiap kontraksi. Durasi & interval dihitung otomatis.</li>
+      </ol>
+    </div>
+    <div class="card" id="pretermCard" hidden style="background:var(--danger-soft);border-color:transparent;box-shadow:none">
+      <strong style="color:var(--danger)">Usia kehamilan di bawah 37 minggu.</strong>
+      <p class="small" style="margin:4px 0 0">Kontraksi yang teratur sebelum 37 minggu perlu segera diperiksa. Jangan menunggu pola tertentu — hubungi bidan atau fasilitas kesehatan sekarang.</p>
+    </div>
+    <div class="card">
+      <div class="clockline">
+        <span class="status-pill" id="statusPill"><span class="dot"></span><span id="statusText">Siap mencatat</span></span>
+        <span class="clock" id="clock" aria-label="Jam saat ini">--.--.--</span>
+      </div>
+      <div class="ringwrap">
+        <svg viewBox="0 0 120 120" aria-hidden="true"><circle class="ring-bg" cx="60" cy="60" r="52" fill="none" stroke-width="9"/><circle class="ring-fg" id="ring" cx="60" cy="60" r="52" fill="none" stroke-width="9" stroke-linecap="round" stroke-dasharray="326.73" stroke-dashoffset="326.73"/></svg>
+        <div class="ring-center">
+          <div class="big" id="bigTime" aria-live="off">00:00</div>
+          <div class="lbl" id="bigLbl">Durasi kontraksi</div>
+        </div>
+      </div>
+      <button class="bigbtn start" id="mainBtn" aria-live="polite"><span id="mainBtnText">START CONTRACTION</span><small id="mainBtnSub">Tekan saat perut mulai kencang</small></button>
+      <div class="center" style="margin-top:6px"><button class="btn ghost sm" id="cancelBtn" hidden>Batalkan kontraksi ini (salah tekan)</button></div>
+      <div id="intensityBox" hidden style="margin-top:12px">
+        <div class="small center"><b id="lastSavedText"></b><br><span class="muted">Seberapa kuat kontraksi tadi? (opsional)</span></div>
+        <div class="intensity" id="intensityBtns">
+          <button data-int="1">Ringan</button><button data-int="2">Sedang</button><button data-int="3">Kuat</button>
+        </div>
+      </div>
+    </div>
+    <div class="stats" id="timerStats"></div>
+    <div class="card sage" id="patternCard" hidden></div>
+    <div class="card danger">
+      <h3>Ada tanda bahaya? Jangan tunggu pola kontraksi.</h3>
+      <p class="small" style="margin-bottom:10px">Ketuban pecah/merembes, perdarahan, gerakan janin berkurang, nyeri hebat terus-menerus, sakit kepala berat, pandangan kabur, sesak, atau kejang — segera hubungi bidan/faskes.</p>
+      <div class="row">
+        <button class="btn danger sm" data-contact>Hubungi Bidan / Faskes</button>
+        <a class="btn danger-outline sm" href="#tanda-bahaya">Lihat semua tanda</a>
+      </div>
+    </div>
+    <p class="disclaimer">Pencatatan ini membantu Anda dan bidan melihat pola, namun tidak dapat memastikan persalinan atau pembukaan serviks.</p>
+  </section>
+
+  <!-- ===================== RIWAYAT ===================== -->
+  <section class="view" id="v-riwayat" aria-label="Riwayat kontraksi">
+    <h2>Riwayat Kontraksi</h2>
+    <div class="field" style="margin-bottom:12px">
+      <label for="sessionSel" class="sr">Pilih sesi</label>
+      <select class="sel" id="sessionSel"></select>
+    </div>
+    <div class="stats" id="histStats" style="margin-top:0"></div>
+    <div class="seg" role="tablist">
+      <button class="on" data-seg="list" role="tab" aria-selected="true">Daftar</button>
+      <button data-seg="chart" role="tab" aria-selected="false">Grafik</button>
+    </div>
+    <div id="segList">
+      <div class="legend"><span><i class="lvl-1"></i>Singkat &lt;30 dtk</span><span><i class="lvl-2"></i>Sedang 30–59 dtk</span><span><i class="lvl-3"></i>Panjang ≥60 dtk</span></div>
+      <div class="hhead" id="hhead"><span>No</span><span>Mulai–Selesai</span><span>Durasi</span><span>Interval</span><span></span></div>
+      <ul class="hlist" id="hlist"></ul>
+    </div>
+    <div id="segChart" hidden>
+      <div class="card">
+        <h3>Durasi & Interval dari Waktu ke Waktu</h3>
+        <p class="small muted">Garis <b style="color:var(--rose)">mawar</b> = durasi (detik, sumbu kiri). Garis <b style="color:#6f8a67">hijau</b> = interval (menit, sumbu kanan). Ketuk titik untuk melihat detail.</p>
+        <div class="chartbox" id="chartbox" role="img" aria-label="Grafik durasi dan interval kontraksi"></div>
+        <p class="small" id="trendText" style="margin:12px 0 0"></p>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Kelola & Bagikan</h3>
+      <div class="row" style="margin-top:8px">
+        <button class="btn sage sm" id="shareBtn">Bagikan ke Bidan</button>
+        <button class="btn secondary sm" id="csvBtn">Ekspor CSV</button>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <button class="btn secondary sm" id="newSessionBtn">Mulai Sesi Baru</button>
+        <button class="btn danger-outline sm" id="resetBtn">Reset Riwayat</button>
+      </div>
+      <p class="small muted" style="margin:12px 0 0">Data tersimpan otomatis di perangkat ini saja dan tidak dikirim ke server.</p>
+    </div>
+  </section>
+
+  <!-- ===================== EDUKASI ===================== -->
+  <section class="view" id="v-edukasi" aria-label="Edukasi kontraksi">
+    <div class="eyebrow">Panduan Bidan Age</div>
+    <h2>Memahami Kontraksi</h2>
+    <p class="muted">Kontraksi adalah otot rahim yang mengencang lalu mengendur. Mengenali polanya membantu Bunda tetap tenang dan tahu kapan perlu menghubungi bidan.</p>
+    <div class="compare">
+      <div class="card">
+        <div class="eyebrow">A</div>
+        <h3>Kontraksi Asli (Persalinan)</h3>
+        <ul class="clean small">
+          <li>Cenderung <b>semakin teratur</b>.</li>
+          <li>Dapat <b>semakin kuat dan semakin lama</b>.</li>
+          <li><b>Interval dapat semakin pendek</b> (makin sering).</li>
+          <li>Umumnya <b>tidak menghilang</b> hanya dengan istirahat atau berganti posisi.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="eyebrow" style="color:#6f8a67">B</div>
+        <h3>Kontraksi Palsu (Braxton Hicks)</h3>
+        <ul class="clean small">
+          <li>Biasanya <b>tidak teratur</b>.</li>
+          <li>Intensitas <b>tidak meningkat secara konsisten</b>.</li>
+          <li>Dapat <b>mereda dengan istirahat</b>, minum, atau perubahan aktivitas.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card soft">
+      <p class="small" style="margin:0"><b>Perlu diingat:</b> pola kontraksi di atas hanyalah gambaran umum. Pola tersebut <b>tidak dapat memastikan pembukaan serviks atau diagnosis persalinan</b>. Hanya pemeriksaan oleh bidan atau dokter yang dapat menilainya.</p>
+    </div>
+
+    <h3 style="margin-top:20px">Cara Menghitung</h3>
+    <details open>
+      <summary>Durasi & interval itu apa?</summary>
+      <div class="small">
+        <p><b>Durasi</b> = lamanya satu kontraksi, dari mulai terasa kencang sampai mereda.</p>
+        <p><b>Interval</b> = jarak dari <b>awal</b> satu kontraksi ke <b>awal</b> kontraksi berikutnya — bukan dari selesai ke mulai.</p>
+        <p style="margin:0">Contoh: Kontraksi 1 mulai 10.00 (selesai 10.00.45). Kontraksi 2 mulai 10.05, selesai 10.05.50. Maka durasi kontraksi ke-2 = <b>50 detik</b>, interval = <b>5 menit</b>.</p>
+      </div>
+    </details>
+    <details>
+      <summary>Kapan biasanya diminta menghubungi bidan?</summary>
+      <div class="small">
+        <p>Sebagai gambaran umum, banyak tenaga kesehatan meminta ibu yang baru pertama kali melahirkan menghubungi bidan bila kontraksi datang sekitar <b>tiap 5 menit</b>, berlangsung sekitar <b>1 menit</b>, dan terus begitu selama sekitar <b>1 jam</b> (sering disebut pola 5-1-1).</p>
+        <p style="margin:0">Ibu yang pernah melahirkan, tinggal jauh dari faskes, atau memiliki kondisi khusus mungkin diminta datang lebih awal. <b>Ikuti arahan bidan/dokter Anda.</b> Jika ada tanda bahaya, jangan menunggu pola apa pun.</p>
+      </div>
+    </details>
+    <details>
+      <summary>Tips nyaman saat kontraksi</summary>
+      <div class="small">
+        <ul class="clean">
+          <li>Tarik napas perlahan lewat hidung, hembuskan panjang lewat mulut.</li>
+          <li>Cari posisi nyaman: berjalan pelan, duduk di bola persalinan, atau berbaring miring kiri.</li>
+          <li>Minta pendamping memijat punggung bawah.</li>
+          <li>Tetap minum dan makan ringan bila diperbolehkan bidan.</li>
+          <li>Kosongkan kandung kemih secara berkala.</li>
+        </ul>
+      </div>
+    </details>
+
+    <div class="card danger" id="tanda-bahaya" style="margin-top:20px;scroll-margin-top:16px">
+      <div class="eyebrow" style="color:var(--danger)">Segera ke Fasilitas Kesehatan</div>
+      <h3>Kapan Harus Segera Menghubungi Bidan / Faskes</h3>
+      <p class="small">Segera hubungi bidan atau datang ke fasilitas kesehatan <b>tanpa menunggu pola kontraksi tertentu</b> jika:</p>
+      <ul class="checklist small">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="#A8434F" stroke-width="2.4" stroke-linecap="round"><path d="M12 3l9.5 17h-19z"/><path d="M12 10v4M12 17.5v.1"/></svg><span><b>Ketuban pecah</b> atau dicurigai merembes (terutama bila keruh, kehijauan, atau berbau).</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="#A8434F" stroke-width="2.4" stroke-linecap="round"><path d="M12 3l9.5 17h-19z"/><path d="M12 10v4M12 17.5v.1"/></svg><span>Terjadi <b>perdarahan dari jalan lahir</b>.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="#A8434F" stroke-width="2.4" stroke-linecap="round"><path d="M12 3l9.5 17h-19z"/><path d="M12 10v4M12 17.5v.1"/></svg><span><b>Gerakan janin berkurang</b> dari pola biasanya.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="#A8434F" stroke-width="2.4" stroke-linecap="round"><path d="M12 3l9.5 17h-19z"/><path d="M12 10v4M12 17.5v.1"/></svg><span><b>Nyeri perut hebat</b> atau terus-menerus tanpa jeda.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="#A8434F" stroke-width="2.4" stroke-linecap="round"><path d="M12 3l9.5 17h-19z"/><path d="M12 10v4M12 17.5v.1"/></svg><span>Ibu mengalami <b>sakit kepala berat, pandangan kabur, sesak napas, kejang</b>, atau kondisi darurat lainnya.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="#A8434F" stroke-width="2.4" stroke-linecap="round"><path d="M12 3l9.5 17h-19z"/><path d="M12 10v4M12 17.5v.1"/></svg><span>Kontraksi terjadi <b>sebelum usia kehamilan 37 minggu</b>.</span></li>
+      </ul>
+      <p class="small"><b>Apabila ragu, lebih baik menghubungi bidan.</b> Aplikasi ini tidak dapat memastikan waktu persalinan atau pembukaan serviks.</p>
+      <button class="btn danger block" data-contact>Hubungi Bidan / Fasilitas Kesehatan</button>
+    </div>
+    <p class="signature">With love, Bidan Age — @yourmidwifes</p>
+  </section>
+
+  <!-- ===================== AYAH ===================== -->
+  <section class="view" id="v-ayah" aria-label="Untuk Ayah">
+    <div class="eyebrow">Fitur Pendamping</div>
+    <h2>Ayah, Ini Tugas Pentingmu!</h2>
+    <p class="muted">Kehadiran Ayah membuat Bunda merasa aman. Tidak perlu jadi ahli — cukup tenang, sigap, dan penuh kasih. Ini langkah-langkahnya:</p>
+    <div class="card">
+      <ol class="steps">
+        <li><span><b>Tekan START saat perut Bunda mulai terasa kencang.</b><span class="small muted">Tanyakan lembut, "Mulai kencang, Bun?" lalu tekan tombolnya.</span></span></li>
+        <li><span><b>Tekan STOP saat kontraksi mereda.</b><span class="small muted">Durasi dan interval akan dihitung otomatis.</span></span></li>
+        <li><span><b>Catat pola kontraksi secara konsisten.</b><span class="small muted">Catat setiap kontraksi, jangan dilewati, agar polanya terlihat jelas.</span></span></li>
+        <li><span><b>Bantu Bunda bernapas dan merasa nyaman.</b><span class="small muted">Ajak bernapas pelan bersama, pijat punggung bawah, tawarkan minum.</span></span></li>
+        <li><span><b>Siapkan transportasi dan perlengkapan persalinan.</b><span class="small muted">Pastikan kendaraan siap dan tas persalinan sudah di dekat pintu.</span></span></li>
+        <li><span><b>Hubungi bidan atau fasilitas kesehatan sesuai kondisi Bunda.</b><span class="small muted">Jika ada tanda bahaya, langsung hubungi — jangan menunggu.</span></span></li>
+      </ol>
+      <div class="row">
+        <a class="btn primary sm" href="#timer">Buka Timer</a>
+        <button class="btn secondary sm" data-contact>Hubungi Bidan</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Checklist Tas Persalinan</h3>
+      <div class="progress"><i id="bagProg" style="width:0"></i></div>
+      <p class="small muted" id="bagCount" style="margin-bottom:6px"></p>
+      <div class="bag" id="bag"></div>
+    </div>
+    <div class="card sage">
+      <p style="margin:0"><b>Pesan Bidan Age untuk Ayah:</b> Suaramu yang tenang adalah obat terbaik untuk Bunda. Pegang tangannya, katakan bahwa ia hebat. Kalian tim yang kuat. 💗</p>
+    </div>
+  </section>
+
+  <!-- ===================== PROFIL ===================== -->
+  <section class="view" id="v-profil" aria-label="Profil dan pengaturan">
+    <h2>Profil & Pengaturan</h2>
+    <div class="card">
+      <h3>Data Bunda</h3>
+      <div class="field"><label for="fName">Nama Bunda</label><input id="fName" autocomplete="name" placeholder="cth. Bunda Sari"></div>
+      <div class="field"><label for="fWeeks">Usia kehamilan (minggu)</label><input id="fWeeks" type="number" inputmode="numeric" min="20" max="44" placeholder="cth. 38"></div>
+    </div>
+    <div class="card">
+      <h3>Kontak Bidan / Fasilitas Kesehatan</h3>
+      <p class="small muted">Nomor ini dipakai tombol "Hubungi Bidan / Faskes" dan untuk berbagi ringkasan lewat WhatsApp.</p>
+      <div class="field"><label for="fCName">Nama bidan / faskes</label><input id="fCName" placeholder="cth. Bidan Age / Puskesmas"></div>
+      <div class="field"><label for="fCPhone">Nomor telepon / WhatsApp</label><input id="fCPhone" type="tel" inputmode="tel" placeholder="cth. 0812xxxxxxx"></div>
+      <button class="btn secondary sm" data-contact>Uji tombol hubungi</button>
+    </div>
+    <div class="card">
+      <h3>Pengaturan</h3>
+      <div class="switch"><span><b>Suara saat kontraksi selesai</b><small>Bunyi lembut ketika STOP ditekan</small></span><label class="toggle"><input type="checkbox" id="sSound"><i></i></label></div>
+      <div class="switch"><span><b>Getaran</b><small>Bergetar ketika STOP ditekan (jika HP mendukung)</small></span><label class="toggle"><input type="checkbox" id="sVib"><i></i></label></div>
+      <div class="switch"><span><b>Mode malam</b><small>Nyaman untuk mata saat malam hari</small></span><label class="toggle"><input type="checkbox" id="sDark"><i></i></label></div>
+      <button class="btn ghost sm" id="testFeedback" style="margin-top:6px">Coba suara & getar</button>
+    </div>
+    <details>
+      <summary>Petunjuk penggunaan</summary>
+      <div class="small">
+        <ol style="padding-left:1.1rem;margin:0">
+          <li>Buka menu <b>Timer</b>. Tekan <b>START CONTRACTION</b> saat kontraksi mulai.</li>
+          <li>Tekan <b>STOP CONTRACTION</b> saat kontraksi mereda. Pilih kekuatannya bila mau.</li>
+          <li>Interval dihitung dari awal kontraksi sebelumnya ke awal kontraksi saat ini.</li>
+          <li>Lihat menu <b>Riwayat</b> untuk daftar, grafik, ekspor CSV, dan berbagi ke bidan.</li>
+          <li>Gunakan <b>Mulai Sesi Baru</b> bila kontraksi sebelumnya sudah lama berhenti (mis. kontraksi palsu kemarin).</li>
+          <li>Salah tekan START? Gunakan tombol <b>Batalkan</b>. Salah catat? Hapus dari Riwayat.</li>
+        </ol>
+      </div>
+    </details>
+    <details>
+      <summary>Privasi data</summary>
+      <div class="small"><p style="margin:0">Seluruh riwayat dan profil <b>tersimpan secara lokal di perangkat dan browser ini</b> (localStorage). Data <b>tidak otomatis dikirim ke server</b> mana pun. Data hanya keluar dari perangkat bila Bunda sendiri menyalin, mengekspor, atau membagikannya. Menghapus data browser akan menghapus riwayat ini.</p></div>
+    </details>
+    <details>
+      <summary>Pasang di layar utama HP</summary>
+      <div class="small">
+        <p><b>Android (Chrome):</b> buka aplikasi di browser → menu ⋮ → <i>Tambahkan ke layar utama</i> / <i>Instal aplikasi</i>.</p>
+        <p style="margin:0"><b>iPhone (Safari):</b> ketuk ikon Bagikan → <i>Tambahkan ke Layar Utama</i>.</p>
+        <button class="btn primary sm" id="installBtn" hidden style="margin-top:10px">Pasang Aplikasi</button>
+      </div>
+    </details>
+    <div class="card soft center" style="margin-top:14px">
+      <svg class="logo" viewBox="0 0 48 48" style="width:52px;height:52px" aria-hidden="true"><circle cx="24" cy="26" r="18" fill="#E8B9BE"/><circle cx="24" cy="26" r="18" fill="none" stroke="#B97883" stroke-width="2.5"/><rect x="20" y="3" width="8" height="5" rx="2" fill="#B97883"/><path d="M24 34.5c-5-3.6-8-6.3-8-9.4 0-2.3 1.8-4.1 4-4.1 1.6 0 3 .9 4 2.3 1-1.4 2.4-2.3 4-2.3 2.2 0 4 1.8 4 4.1 0 3.1-3 5.8-8 9.4z" fill="#fff"/></svg>
+      <h3 style="margin-top:6px">Contraction Timer by Bidan Age</h3>
+      <p class="small muted" style="margin:0">Tenang, Catat, Pantau. Bidan Age Temani Persiapan Persalinanmu.<br>Instagram/TikTok: @yourmidwifes</p>
+      <a class="btn ghost sm" href="#ayah" style="margin-top:6px">Halaman untuk Ayah →</a>
+    </div>
+    <p class="disclaimer">Aplikasi ini merupakan alat pencatat, bukan alat diagnosis medis.</p>
+    <p class="signature">With love, Bidan Age — @yourmidwifes</p>
+  </section>
+</div>
+
+<nav class="bnav" aria-label="Navigasi utama">
+  <div class="inner">
+    <a href="#beranda" data-nav="beranda"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>Beranda</a>
+    <a href="#timer" data-nav="timer"><span class="badge" id="navBadge"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M10 2h4"/></svg>Timer</a>
+    <a href="#riwayat" data-nav="riwayat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg>Riwayat</a>
+    <a href="#edukasi" data-nav="edukasi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5h7a3 3 0 013 3v12a2 2 0 00-2-2H2zM22 5h-7a3 3 0 00-3 3v12a2 2 0 012-2h8z"/></svg>Edukasi</a>
+    <a href="#profil" data-nav="profil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>Profil</a>
+  </div>
+</nav>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <div class="sheet">
+    <h3 id="mTitle"></h3>
+    <div id="mBody" class="small"></div>
+    <div class="actions" id="mActions"></div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"><span id="toastMsg"></span><button id="toastAct" hidden></button></div>
+
+<script>
+(function(){
+'use strict';
+/* ================= Konstanta & util ================= */
+const LS_KEY = 'ctba_v1';
+const MIN_MS = 3000;            // < 3 detik dianggap salah tekan
+const LONG_MS = 5 * 60 * 1000;  // > 5 menit: kemungkinan STOP terlewat
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad = n => String(n).padStart(2, '0');
+
+function fmtClock(sec){ sec = Math.max(0, Math.floor(sec)); const h = Math.floor(sec/3600), m = Math.floor(sec%3600/60), s = sec%60; return h ? `${h}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`; }
+function fmtDur(sec){ if (sec == null || isNaN(sec)) return '—'; sec = Math.round(sec); if (sec < 60) return `${sec} dtk`; const m = Math.floor(sec/60), s = sec%60; return `${m} mnt ${pad(s)} dtk`; }
+function fmtInt(sec){ if (sec == null || isNaN(sec)) return '—'; sec = Math.round(sec); if (sec >= 3600){ const h = Math.floor(sec/3600), m = Math.floor(sec%3600/60); return `${h} j ${m} mnt`; } const m = Math.floor(sec/60), s = sec%60; return m ? `${m} mnt ${pad(s)} dtk` : `${s} dtk`; }
+function fmtTime(ts){ const d = new Date(ts); return `${pad(d.getHours())}.${pad(d.getMinutes())}.${pad(d.getSeconds())}`; }
+function fmtHM(ts){ const d = new Date(ts); return `${pad(d.getHours())}.${pad(d.getMinutes())}`; }
+function fmtDate(ts){ return new Date(ts).toLocaleDateString('id-ID', {weekday:'short', day:'numeric', month:'short', year:'numeric'}); }
+function fmtDateShort(ts){ const d = new Date(ts); return `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}`; }
+const mean = a => a.length ? a.reduce((x,y)=>x+y,0)/a.length : null;
+
+/* ================= State & penyimpanan ================= */
+function newSession(){ return { id: uid(), created: Date.now(), items: [] }; }
+function defaultState(){
+  const s = newSession();
+  return { v:1, sessions:[s], currentId:s.id, active:null,
+    settings:{ sound:true, vibrate:true, dark:false, motherName:'', weeks:'', contactName:'', contactPhone:'' },
+    checklist:{}, tipsDismissed:false };
+}
+function migrate(d){
+  const base = defaultState();
+  if (!d || typeof d !== 'object') return base;
+  d.settings = Object.assign(base.settings, d.settings || {});
+  if (!Array.isArray(d.sessions) || !d.sessions.length){ d.sessions = base.sessions; d.currentId = base.currentId; }
+  d.sessions.forEach(s => { s.items = (s.items || []).filter(it => it && isFinite(it.start) && isFinite(it.end) && it.end > it.start); });
+  if (!d.sessions.find(s => s.id === d.currentId)) d.currentId = d.sessions[d.sessions.length-1].id;
+  if (d.active && !(isFinite(d.active.start))) d.active = null;
+  d.checklist = d.checklist || {};
+  return d;
+}
+let storageOk = true;
+function load(){ try { const raw = localStorage.getItem(LS_KEY); if (raw) return migrate(JSON.parse(raw)); } catch(e){ storageOk = false; } return defaultState(); }
+function save(){
+  try { localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+  catch(e){ if (storageOk){ storageOk = false; toast('Penyimpanan lokal tidak tersedia — data hanya bertahan selama halaman terbuka.'); } }
+}
+let state = load();
+let viewSessionId = state.currentId;
+let lastSavedId = null;
+
+const cur = () => state.sessions.find(s => s.id === state.currentId);
+const sessionById = id => state.sessions.find(s => s.id === id);
+
+/* Hitung baris: interval = mulai saat ini − mulai sebelumnya */
+function rows(session){
+  const items = (session?.items || []).slice().sort((a,b) => a.start - b.start);
+  return items.map((it, i) => ({
+    ...it, no: i + 1,
+    dur: (it.end - it.start) / 1000,
+    int: i > 0 ? (it.start - items[i-1].start) / 1000 : null
+  }));
+}
+function stats(rs){
+  const durs = rs.map(r => r.dur), ints = rs.map(r => r.int).filter(v => v != null);
+  return { count: rs.length, avgDur: mean(durs), avgInt: mean(ints),
+    maxDur: durs.length ? Math.max(...durs) : null, minInt: ints.length ? Math.min(...ints) : null,
+    lastInt: ints.length ? ints[ints.length-1] : null };
+}
+const lvl = d => d < 30 ? 1 : d < 60 ? 2 : 3;
+const lvlName = ['', 'Singkat', 'Sedang', 'Panjang'];
+const intName = ['', 'Ringan', 'Sedang', 'Kuat'];
+
+/* ================= Toast & dialog ================= */
+let toastTimer;
+function toast(msg, actLabel, actFn, ms = 3800){
+  $('#toastMsg').textContent = msg;
+  const b = $('#toastAct');
+  if (actLabel){ b.hidden = false; b.textContent = actLabel; b.onclick = () => { hideToast(); actFn(); }; } else { b.hidden = true; b.onclick = null; }
+  $('#toast').classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(hideToast, ms);
+}
+function hideToast(){ $('#toast').classList.remove('show'); }
+
+let modalOnClose = null;
+function openModal({ title, body, actions = [], onClose }){
+  $('#mTitle').textContent = title;
+  $('#mBody').innerHTML = body;
+  const box = $('#mActions'); box.innerHTML = '';
+  actions.forEach(a => {
+    const el = document.createElement(a.href ? 'a' : 'button');
+    el.className = 'btn sm ' + (a.kind || 'secondary');
+    el.textContent = a.label;
+    if (a.href){ el.href = a.href; el.target = '_blank'; el.rel = 'noopener'; }
+    el.addEventListener('click', e => { const keep = a.fn ? a.fn(e) : false; if (keep !== true && !a.href) closeModal(true); });
+    box.appendChild(el);
+  });
+  modalOnClose = onClose || null;
+  $('#modal').classList.add('open');
+  setTimeout(() => { const f = box.querySelector('.btn'); f && f.focus(); }, 30);
+}
+function closeModal(fromAction){
+  if (!$('#modal').classList.contains('open')) return;
+  $('#modal').classList.remove('open');
+  const cb = modalOnClose; modalOnClose = null;
+  if (!fromAction && cb) cb();
+}
+$('#modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal(false); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(false); });
+
+/* ================= Suara & getar ================= */
+let audioCtx;
+function chime(){
+  try {
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const t = audioCtx.currentTime;
+    [[659.25, 0], [880, 0.16]].forEach(([f, off]) => {
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.type = 'sine'; o.frequency.value = f;
+      g.gain.setValueAtTime(0.0001, t + off);
+      g.gain.exponentialRampToValueAtTime(0.22, t + off + 0.03);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + off + 0.7);
+      o.connect(g).connect(audioCtx.destination); o.start(t + off); o.stop(t + off + 0.75);
+    });
+  } catch(e){}
+}
+function buzz(){ try { navigator.vibrate && navigator.vibrate([120, 80, 120]); } catch(e){} }
+function feedback(){ if (state.settings.sound) chime(); if (state.settings.vibrate) buzz(); }
+
+/* ================= Logika timer ================= */
+function startContraction(){
+  if (state.active){ toast('Masih ada kontraksi yang berjalan. Tekan STOP dulu.'); return; }
+  state.active = { start: Date.now(), sessionId: state.currentId };
+  lastSavedId = null;
+  save(); renderTimer(); renderNav();
+}
+function stopContraction(){
+  if (!state.active) return;
+  const start = state.active.start, end = Date.now(), dur = end - start;
+  if (dur < MIN_MS){
+    state.active = null; save(); renderAll();
+    toast('Terlalu singkat (< 3 detik), tidak disimpan. Mungkin salah tekan?');
+    return;
+  }
+  if (dur > LONG_MS){
+    openModal({
+      title: 'Durasi tidak biasa',
+      body: `<p>Kontraksi ini tercatat berlangsung <b>${fmtDur(dur/1000)}</b> (mulai ${fmtTime(start)}). Kontraksi biasanya hanya berlangsung kurang dari 2 menit — kemungkinan tombol STOP terlewat.</p><p style="margin:0">Simpan catatan ini apa adanya?</p>`,
+      actions: [
+        { label: 'Buang catatan', kind: 'danger-outline', fn: () => { state.active = null; save(); renderAll(); toast('Catatan dibuang.'); } },
+        { label: 'Tetap simpan', kind: 'primary', fn: () => commit(start, end) }
+      ]
+    });
+    return;
+  }
+  commit(start, end);
+}
+function commit(start, end){
+  const sess = sessionById(state.active?.sessionId) || cur();
+  const item = { id: uid(), start, end, intensity: null };
+  sess.items.push(item); sess.items.sort((a,b) => a.start - b.start);
+  state.active = null; lastSavedId = item.id;
+  save(); feedback(); renderAll();
+}
+function cancelContraction(){
+  if (!state.active) return;
+  state.active = null; save(); renderAll(); toast('Kontraksi dibatalkan, tidak disimpan.');
+}
+$('#mainBtn').addEventListener('click', () => state.active ? stopContraction() : startContraction());
+$('#cancelBtn').addEventListener('click', cancelContraction);
+$('#intensityBtns').addEventListener('click', e => {
+  const b = e.target.closest('button[data-int]'); if (!b || !lastSavedId) return;
+  const it = state.sessions.flatMap(s => s.items).find(i => i.id === lastSavedId); if (!it) return;
+  const v = +b.dataset.int; it.intensity = it.intensity === v ? null : v;
+  save(); renderAll();
+});
+
+/* Pemulihan setelah halaman dimuat ulang / browser ditutup */
+function checkRecovery(){
+  if (!state.active) return;
+  const el = Date.now() - state.active.start;
+  if (el <= LONG_MS){
+    toast(`Timer dilanjutkan — kontraksi dimulai ${fmtTime(state.active.start)}.`);
+    return;
+  }
+  openModal({
+    title: 'Ada kontraksi yang belum dihentikan',
+    body: `<p>Kontraksi dimulai pukul <b>${fmtTime(state.active.start)}</b> (${fmtDate(state.active.start)}) dan belum ditekan STOP — sudah ${fmtInt(el/1000)} berlalu.</p><p style="margin:0">Agar riwayat tetap akurat, catatan ini <b>tidak disimpan otomatis</b>. Pilih tindakan:</p>`,
+    actions: [
+      { label: 'Buang catatan ini', kind: 'primary', fn: () => { state.active = null; save(); renderAll(); toast('Catatan yang terputus dibuang.'); } },
+      { label: 'Lanjutkan timer', kind: 'secondary', fn: () => {} }
+    ]
+  });
+}
+
+/* ================= Render: Timer ================= */
+const RING = 2 * Math.PI * 52;
+function tick(){
+  const now = Date.now();
+  $('#clock').textContent = fmtTime(now);
+  if (state.active){
+    const sec = (now - state.active.start) / 1000;
+    $('#bigTime').textContent = fmtClock(sec);
+    $('#ring').style.strokeDashoffset = RING * (1 - Math.min(sec, 90) / 90);
+  } else {
+    const rs = rows(cur()); const last = rs[rs.length-1];
+    if (last){
+      const sec = (now - last.start) / 1000;
+      $('#bigTime').textContent = fmtClock(sec);
+    }
+  }
+}
+function renderTimer(){
+  const on = !!state.active, rs = rows(cur()), st = stats(rs), last = rs[rs.length-1];
+  const btn = $('#mainBtn');
+  btn.className = 'bigbtn ' + (on ? 'stop' : 'start');
+  $('#mainBtnText').textContent = on ? 'STOP CONTRACTION' : 'START CONTRACTION';
+  $('#mainBtnSub').textContent = on ? 'Tekan saat kontraksi mereda' : (rs.length ? `Kontraksi ke-${rs.length+1} — tekan saat mulai kencang` : 'Tekan saat perut mulai kencang');
+  $('#cancelBtn').hidden = !on;
+  $('#statusPill').classList.toggle('on', on);
+  $('#statusText').textContent = on ? `Kontraksi berjalan · mulai ${fmtTime(state.active.start)}` : 'Siap mencatat';
+  if (on){ $('#bigLbl').textContent = 'Durasi kontraksi'; }
+  else if (last){ $('#bigLbl').textContent = 'Sejak awal kontraksi terakhir'; $('#ring').style.strokeDashoffset = RING; }
+  else { $('#bigTime').textContent = '00:00'; $('#bigLbl').textContent = 'Durasi kontraksi'; $('#ring').style.strokeDashoffset = RING; }
+
+  // Kotak intensitas untuk catatan terakhir yang baru disimpan
+  const saved = lastSavedId && rs.find(r => r.id === lastSavedId);
+  $('#intensityBox').hidden = !(saved && !on);
+  if (saved){
+    $('#lastSavedText').textContent = `Tersimpan: kontraksi #${saved.no} · ${fmtDur(saved.dur)}` + (saved.int != null ? ` · interval ${fmtInt(saved.int)}` : '');
+    $$('#intensityBtns button').forEach(b => b.classList.toggle('sel', +b.dataset.int === saved.intensity));
+  }
+
+  $('#timerStats').innerHTML = [
+    ['Jumlah kontraksi', st.count],
+    ['Interval terakhir', fmtInt(st.lastInt)],
+    ['Rata-rata durasi', fmtDur(st.avgDur)],
+    ['Rata-rata interval', fmtInt(st.avgInt)]
+  ].map(([k,v]) => `<div class="stat"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('');
+
+  renderPattern(rs);
+  const w = parseInt(state.settings.weeks, 10);
+  $('#pretermCard').hidden = !(w && w < 37);
+  $('#tipsCard').hidden = state.tipsDismissed;
+  tick();
+}
+function renderPattern(rs){
+  const card = $('#patternCard');
+  const now = Date.now(), hourAgo = now - 3600e3;
+  const recent = rs.filter(r => r.start >= hourAgo);
+  if (recent.length < 3){ card.hidden = true; return; }
+  const ints = recent.map(r => r.int).filter(v => v != null && v < 3600);
+  const aD = mean(recent.map(r => r.dur)), aI = mean(ints);
+  const span = (recent[recent.length-1].start - recent[0].start) / 60000;
+  const fiveOneOne = recent.length >= 6 && span >= 50 && aI != null && aI <= 330 && aD >= 55 && ints.every(i => i <= 450);
+  card.hidden = false;
+  card.innerHTML = `<h3>Pola 1 jam terakhir</h3>
+    <p class="small" style="margin-bottom:${fiveOneOne ? '8px' : '0'}">${recent.length} kontraksi tercatat · rata-rata durasi <b>${fmtDur(aD)}</b> · rata-rata interval <b>${fmtInt(aI)}</b>.</p>
+    ${fiveOneOne ? `<p class="small" style="margin:0"><b>Pola ini mendekati patokan yang sering dipakai bidan (sekitar 5-1-1).</b> Hubungi bidan atau fasilitas kesehatan untuk konsultasi, ya Bunda. Ini bukan diagnosis persalinan.</p>
+    <button class="btn primary sm" data-contact style="margin-top:10px">Hubungi Bidan / Faskes</button>` : ''}`;
+}
+
+/* ================= Render: Beranda & nav ================= */
+function renderHome(){
+  const rs = rows(cur()), box = $('#homeStatus');
+  if (state.active){
+    box.hidden = false;
+    box.innerHTML = `<b>Kontraksi sedang berjalan</b><br><span class="small muted">Dimulai ${fmtTime(state.active.start)} — buka Timer untuk menekan STOP.</span>`;
+    $('#homeStart').lastChild.textContent = 'LANJUTKAN KE TIMER';
+  } else if (rs.length){
+    const st = stats(rs), last = rs[rs.length-1];
+    box.hidden = false;
+    box.innerHTML = `<b>Sesi berjalan: ${st.count} kontraksi</b><br><span class="small muted">Terakhir pukul ${fmtHM(last.start)} · rata-rata interval ${fmtInt(st.avgInt)} · rata-rata durasi ${fmtDur(st.avgDur)}</span>`;
+    $('#homeStart').lastChild.textContent = 'LANJUT HITUNG KONTRAKSI';
+  } else {
+    box.hidden = true;
+    $('#homeStart').lastChild.textContent = 'MULAI HITUNG KONTRAKSI';
+  }
+}
+function renderNav(){ $('#navBadge').classList.toggle('show', !!state.active); }
+
+/* ================= Render: Riwayat ================= */
+function sessionLabel(s, i){
+  const n = s.items.length;
+  const d = new Date(s.created).toLocaleDateString('id-ID', {day:'numeric', month:'short'});
+  return `Sesi ${i+1}${s.id === state.currentId ? ' (aktif)' : ''} · ${d} ${fmtHM(s.created)} · ${n} kontraksi`;
+}
+function renderHistory(){
+  if (!sessionById(viewSessionId)) viewSessionId = state.currentId;
+  const sel = $('#sessionSel');
+  sel.innerHTML = state.sessions.map((s,i) => ({s,i})).reverse().map(({s,i}) => `<option value="${s.id}" ${s.id===viewSessionId?'selected':''}>${esc(sessionLabel(s,i))}</option>`).join('');
+  const sess = sessionById(viewSessionId), rs = rows(sess), st = stats(rs);
+  $('#histStats').innerHTML = [
+    ['Total kontraksi', st.count], ['Rata-rata durasi', fmtDur(st.avgDur)],
+    ['Rata-rata interval', fmtInt(st.avgInt)], ['Durasi terlama', fmtDur(st.maxDur)],
+    ['Interval terpendek', fmtInt(st.minInt)],
+    ['Rentang waktu', rs.length ? `${fmtHM(rs[0].start)}–${fmtHM(rs[rs.length-1].end)}` : '—']
+  ].map(([k,v]) => `<div class="stat"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('');
+  const list = $('#hlist');
+  $('#hhead').hidden = !rs.length;
+  if (!rs.length){
+    list.innerHTML = `<li class="empty">Belum ada kontraksi tercatat di sesi ini.<br><a class="btn primary sm" href="#timer" style="margin-top:12px">Mulai catat</a></li>`;
+  } else {
+    list.innerHTML = rs.slice().reverse().map(r => {
+      const L = lvl(r.dur);
+      return `<li class="hitem">
+        <span class="no lvl-${L}" title="${lvlName[L]}">${r.no}</span>
+        <span class="t">${fmtTime(r.start)}<small>s/d ${fmtTime(r.end)}</small></span>
+        <span class="d">${fmtDur(r.dur)}</span>
+        <span class="i">${r.int == null ? '<span class="muted">pertama</span>' : fmtInt(r.int)}</span>
+        <button class="del" data-del="${r.id}" aria-label="Hapus kontraksi ${r.no}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></button>
+        <span class="tags"><span class="tag lvl-${L}">${lvlName[L]}</span>${r.intensity ? `<span class="tag">${intName[r.intensity]}</span>` : ''}</span>
+      </li>`;
+    }).join('');
+  }
+  if (!$('#segChart').hidden) renderChart();
+}
+$('#sessionSel').addEventListener('change', e => { viewSessionId = e.target.value; renderHistory(); });
+$('#hlist').addEventListener('click', e => {
+  const b = e.target.closest('[data-del]'); if (!b) return;
+  const sess = sessionById(viewSessionId), idx = sess.items.findIndex(i => i.id === b.dataset.del); if (idx < 0) return;
+  const [removed] = sess.items.splice(idx, 1);
+  if (lastSavedId === removed.id) lastSavedId = null;
+  save(); renderAll();
+  toast('Catatan kontraksi dihapus.', 'Urungkan', () => { sess.items.push(removed); sess.items.sort((a,b)=>a.start-b.start); save(); renderAll(); }, 6000);
+});
+$$('.seg button').forEach(b => b.addEventListener('click', () => {
+  $$('.seg button').forEach(x => { x.classList.toggle('on', x === b); x.setAttribute('aria-selected', x === b); });
+  const chart = b.dataset.seg === 'chart';
+  $('#segList').hidden = chart; $('#segChart').hidden = !chart;
+  if (chart) renderChart();
+}));
+
+/* ================= Grafik (SVG interaktif, tanpa internet) ================= */
+let chartShown = false;
+function niceMax(v, step){ return Math.max(step, Math.ceil(v / step) * step); }
+function renderChart(){
+  chartShown = true;
+  const rs = rows(sessionById(viewSessionId));
+  const box = $('#chartbox');
+  if (!rs.length){ box.innerHTML = '<p class="empty">Belum ada data untuk grafik.</p>'; $('#trendText').textContent = ''; return; }
+  const W = Math.max(280, box.clientWidth || 340), H = box.clientHeight || 270;
+  const L = 40, R = 40, T = 26, B = 30, iw = W - L - R, ih = H - T - B;
+  const durs = rs.map(r => Math.round(r.dur)), ints = rs.map(r => r.int == null ? null : r.int / 60);
+  const dMax = niceMax(Math.max(...durs), 30);
+  const validI = ints.filter(v => v != null);
+  const iMax = niceMax(validI.length ? Math.max(...validI) : 5, validI.length && Math.max(...validI) > 20 ? 10 : 2);
+  const n = rs.length;
+  const X = i => n === 1 ? L + iw / 2 : L + iw * i / (n - 1);
+  const YD = v => T + ih - ih * v / dMax, YI = v => T + ih - ih * v / iMax;
+  const rose = '#B97883', sage = '#6F8A67';
+  let g = '';
+  for (let k = 0; k <= 4; k++){
+    const y = T + ih * k / 4;
+    g += `<line class="grid" x1="${L}" x2="${W - R}" y1="${y}" y2="${y}"/>`;
+    g += `<text class="ax" x="${L - 6}" y="${y + 3}" text-anchor="end">${Math.round(dMax * (4 - k) / 4)}</text>`;
+    g += `<text class="ax" x="${W - R + 6}" y="${y + 3}">${+(iMax * (4 - k) / 4).toFixed(1)}</text>`;
+  }
+  g += `<text class="ax" x="${L - 6}" y="${T - 14}" text-anchor="end" style="fill:${rose};font-weight:800">dtk</text>`;
+  g += `<text class="ax" x="${W - R + 6}" y="${T - 14}" style="fill:${sage};font-weight:800">mnt</text>`;
+  const lblEvery = Math.max(1, Math.ceil(n / 5));
+  rs.forEach((r, i) => { if (i % lblEvery === 0 || i === n - 1) g += `<text class="ax" x="${X(i)}" y="${H - 10}" text-anchor="middle">#${r.no} ${fmtHM(r.start)}</text>`; });
+  const dPts = durs.map((v, i) => `${X(i)},${YD(v)}`);
+  if (n > 1) g += `<path d="M${X(0)},${T + ih} L${dPts.join(' L')} L${X(n - 1)},${T + ih} Z" fill="${rose}" opacity=".14"/>`;
+  g += `<polyline points="${dPts.join(' ')}" fill="none" stroke="${rose}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+  const iPts = ints.map((v, i) => v == null ? null : `${X(i)},${YI(v)}`).filter(Boolean);
+  if (iPts.length > 1) g += `<polyline points="${iPts.join(' ')}" fill="none" stroke="${sage}" stroke-width="2.5" stroke-dasharray="6 4" stroke-linejoin="round"/>`;
+  rs.forEach((r, i) => {
+    g += `<circle cx="${X(i)}" cy="${YD(durs[i])}" r="4" fill="${rose}" stroke="var(--surface)" stroke-width="1.5"/>`;
+    if (ints[i] != null) g += `<rect x="${X(i) - 4}" y="${YI(ints[i]) - 4}" width="8" height="8" rx="2" fill="${sage}" stroke="var(--surface)" stroke-width="1.5"/>`;
+  });
+  g += `<line id="cguide" x1="0" x2="0" y1="${T}" y2="${T + ih}" stroke="var(--muted)" stroke-dasharray="3 3" visibility="hidden"/>`;
+  g += `<rect id="chit" x="${L - 10}" y="${T}" width="${iw + 20}" height="${ih}" fill="transparent"/>`;
+  box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${g}</svg><div class="ctip" id="ctip"></div>`;
+  const svg = box.querySelector('svg'), tip = $('#ctip'), guide = $('#cguide');
+  const show = ev => {
+    const rect = svg.getBoundingClientRect();
+    const x = ((ev.touches ? ev.touches[0].clientX : ev.clientX) - rect.left) * W / rect.width;
+    const i = n === 1 ? 0 : Math.max(0, Math.min(n - 1, Math.round((x - L) / iw * (n - 1))));
+    const r = rs[i];
+    guide.setAttribute('x1', X(i)); guide.setAttribute('x2', X(i)); guide.setAttribute('visibility', 'visible');
+    tip.innerHTML = `<b>Kontraksi #${r.no} · ${fmtTime(r.start)}</b>Durasi: ${fmtDur(r.dur)}<br>Interval: ${fmtInt(r.int)}${r.intensity ? '<br>Intensitas: ' + intName[r.intensity] : ''}`;
+    tip.style.display = 'block';
+    const px = X(i) * rect.width / W, tw = tip.offsetWidth;
+    tip.style.left = Math.max(tw / 2, Math.min(rect.width - tw / 2, px)) + 'px';
+  };
+  const hide = () => { tip.style.display = 'none'; guide.setAttribute('visibility', 'hidden'); };
+  const hit = $('#chit');
+  hit.addEventListener('pointermove', show); hit.addEventListener('pointerdown', show);
+  hit.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') hide(); });
+  hit.addEventListener('touchmove', show, { passive: true });
+
+  // Tren sederhana (bahasa awam)
+  const intsS = rs.map(r => r.int).filter(v => v != null && v < 3600);
+  let t = '';
+  if (rs.length < 4) t = 'Catat minimal 4 kontraksi untuk melihat tren.';
+  else {
+    const k = Math.min(3, Math.floor(intsS.length / 2));
+    const first = mean(intsS.slice(0, k)), lastI = mean(intsS.slice(-k));
+    const fd = mean(durs.slice(0, 3)), ld = mean(durs.slice(-3));
+    const iT = !k ? 'belum cukup data' : lastI < first * 0.85 ? '<b>cenderung memendek</b> (makin sering)' : lastI > first * 1.15 ? '<b>cenderung memanjang</b> (makin jarang)' : '<b>relatif stabil</b>';
+    const dT = ld > fd * 1.15 ? '<b>cenderung bertambah lama</b>' : ld < fd * 0.85 ? '<b>cenderung lebih singkat</b>' : '<b>relatif stabil</b>';
+    t = `Tren: interval ${iT}; durasi ${dT}. Ini hanya ringkasan catatan, bukan diagnosis — diskusikan dengan bidan.`;
+  }
+  $('#trendText').innerHTML = t;
+}
+let rzT; window.addEventListener('resize', () => { clearTimeout(rzT); rzT = setTimeout(() => { if (!$('#segChart').hidden) renderChart(); }, 150); });
+
+/* ================= Ekspor CSV & bagikan ================= */
+function csvFor(sess){
+  const rs = rows(sess);
+  const q = v => `"${String(v).replace(/"/g, '""')}"`;
+  const lines = [['No','Tanggal','Jam Mulai','Jam Selesai','Durasi (detik)','Interval (detik)','Interval (menit)','Kategori Durasi','Intensitas'].map(q).join(',')];
+  rs.forEach(r => lines.push([r.no, fmtDateShort(r.start), fmtTime(r.start), fmtTime(r.end), Math.round(r.dur),
+    r.int == null ? '' : Math.round(r.int), r.int == null ? '' : (r.int/60).toFixed(2), lvlName[lvl(r.dur)], r.intensity ? intName[r.intensity] : ''].map(q).join(',')));
+  return lines.join('\r\n');
+}
+function summaryFor(sess){
+  const rs = rows(sess), st = stats(rs), s = state.settings;
+  const L = ['Ringkasan Kontraksi — Contraction Timer by Bidan Age', ''];
+  if (s.motherName) L.push(`Nama: ${s.motherName}`);
+  if (s.weeks) L.push(`Usia kehamilan: ${s.weeks} minggu`);
+  L.push(`Sesi: ${fmtDate(sess.created)}`);
+  if (rs.length) L.push(`Rentang: ${fmtTime(rs[0].start)} – ${fmtTime(rs[rs.length-1].end)}`);
+  L.push(`Total kontraksi: ${st.count}`, `Rata-rata durasi: ${fmtDur(st.avgDur)}`, `Rata-rata interval: ${fmtInt(st.avgInt)}`,
+    `Durasi terlama: ${fmtDur(st.maxDur)}`, `Interval terpendek: ${fmtInt(st.minInt)}`);
+  if (rs.length){
+    L.push('', `Kontraksi terakhir (${Math.min(8, rs.length)}):`);
+    rs.slice(-8).forEach(r => L.push(`#${r.no} ${fmtTime(r.start)} · durasi ${fmtDur(r.dur)} · interval ${fmtInt(r.int)}${r.intensity ? ' · ' + intName[r.intensity] : ''}`));
+  }
+  L.push('', 'Catatan ini dari aplikasi pencatat, bukan diagnosis medis.', 'With love, Bidan Age — @yourmidwifes');
+  return L.join('\n');
+}
+async function copyText(txt){
+  try { await navigator.clipboard.writeText(txt); toast('Tersalin! Tempel di WhatsApp atau catatan.'); return; } catch(e){}
+  const ta = $('#mBody textarea');
+  if (ta){ ta.focus(); ta.select(); try { if (document.execCommand('copy')) { toast('Tersalin!'); return; } } catch(e){} }
+  toast('Tidak bisa menyalin otomatis — tekan lama teks lalu pilih Salin.');
+}
+function waNumber(p){ let d = String(p || '').replace(/\D/g, ''); if (d.startsWith('0')) d = '62' + d.slice(1); return d; }
+let dlApi = null;
+try { if (window.claude && typeof window.claude.use === 'function') window.claude.use('downloads').then(d => { dlApi = d; }).catch(() => {}); } catch(e){}
+async function tryDownload(name, text, mime){
+  if (dlApi){
+    try { await dlApi.save({ filename: name, data: '﻿' + text }); toast('File CSV disimpan.'); return; }
+    catch(e){ toast('Unduhan dibatalkan — Bunda bisa memakai tombol Salin.'); return; }
+  }
+  try {
+    const blob = new Blob(['﻿' + text], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 4000);
+    toast('Jika file tidak terunduh, gunakan tombol Salin.');
+  } catch(e){ toast('Unduhan tidak didukung di sini — gunakan tombol Salin.'); }
+}
+$('#csvBtn').addEventListener('click', () => {
+  const sess = sessionById(viewSessionId);
+  if (!sess.items.length){ toast('Belum ada data untuk diekspor.'); return; }
+  const csv = csvFor(sess);
+  const name = `kontraksi_${fmtDateShort(sess.created).replace(/\//g,'-')}.csv`;
+  openModal({
+    title: 'Ekspor CSV',
+    body: `<p>File CSV dapat dibuka di Excel atau Google Sheets. Unduh file, atau salin teks di bawah lalu tempel ke spreadsheet.</p><textarea readonly aria-label="Data CSV">${esc(csv)}</textarea>`,
+    actions: [
+      { label: 'Unduh CSV', kind: 'primary', fn: () => { tryDownload(name, csv, 'text/csv;charset=utf-8'); return true; } },
+      { label: 'Salin', kind: 'secondary', fn: () => { copyText(csv); return true; } },
+      { label: 'Tutup', kind: 'ghost' }
+    ]
+  });
+});
+$('#shareBtn').addEventListener('click', () => {
+  const sess = sessionById(viewSessionId);
+  if (!sess.items.length){ toast('Belum ada kontraksi untuk dibagikan.'); return; }
+  const txt = summaryFor(sess), num = waNumber(state.settings.contactPhone);
+  const wa = `https://wa.me/${num}?text=${encodeURIComponent(txt)}`;
+  const acts = [{ label: num ? `Kirim WA ke ${state.settings.contactName || 'Bidan'}` : 'Kirim via WhatsApp', kind: 'sage', href: wa },
+    { label: 'Salin ringkasan', kind: 'secondary', fn: () => { copyText(txt); return true; } }];
+  if (navigator.share) acts.push({ label: 'Bagikan…', kind: 'secondary', fn: () => { navigator.share({ title: 'Ringkasan Kontraksi', text: txt }).catch(() => toast('Berbagi tidak tersedia — gunakan Salin atau WhatsApp.')); return true; } });
+  acts.push({ label: 'Tutup', kind: 'ghost' });
+  openModal({
+    title: 'Bagikan ringkasan ke bidan',
+    body: `<textarea readonly aria-label="Ringkasan kontraksi">${esc(txt)}</textarea>${num ? '' : '<p class="muted" style="margin:10px 0 0">Tip: isi nomor bidan di menu Profil agar ringkasan langsung terkirim ke WhatsApp bidan.</p>'}`,
+    actions: acts
+  });
+});
+$('#newSessionBtn').addEventListener('click', () => {
+  if (state.active){ toast('Hentikan kontraksi yang berjalan terlebih dahulu.'); return; }
+  if (!cur().items.length){ toast('Sesi saat ini masih kosong — siap dipakai.'); return; }
+  openModal({
+    title: 'Mulai sesi baru?',
+    body: '<p style="margin:0">Sesi saat ini akan disimpan di riwayat. Perhitungan interval dimulai dari awal pada sesi baru. Cocok dipakai bila kontraksi sebelumnya sudah lama berhenti.</p>',
+    actions: [{ label: 'Batal', kind: 'secondary' }, { label: 'Mulai sesi baru', kind: 'primary', fn: () => {
+      const s = newSession(); state.sessions.push(s); state.currentId = s.id; viewSessionId = s.id; lastSavedId = null; save(); renderAll(); toast('Sesi baru dimulai.'); } }]
+  });
+});
+$('#resetBtn').addEventListener('click', () => {
+  openModal({
+    title: 'Reset seluruh riwayat?',
+    body: '<p style="margin:0">Semua sesi dan catatan kontraksi di perangkat ini akan <b>dihapus permanen</b>. Profil dan pengaturan tetap tersimpan. Tindakan ini tidak dapat dibatalkan.</p>',
+    actions: [{ label: 'Batal', kind: 'secondary' }, { label: 'Ya, hapus semua', kind: 'danger', fn: () => {
+      const s = newSession(); state.sessions = [s]; state.currentId = s.id; state.active = null; viewSessionId = s.id; lastSavedId = null; save(); renderAll(); toast('Riwayat telah direset.'); } }]
+  });
+});
+
+/* ================= Kontak bidan ================= */
+function openContact(){
+  const s = state.settings, num = (s.contactPhone || '').trim();
+  if (!num){
+    openModal({ title: 'Nomor bidan belum diatur',
+      body: '<p>Isi nama dan nomor bidan atau fasilitas kesehatan di menu <b>Profil</b> agar tombol ini bisa langsung menghubungi.</p><p style="margin:0"><b>Dalam keadaan darurat, segera hubungi 119 (Layanan Gawat Darurat) atau datang ke fasilitas kesehatan terdekat.</b></p>',
+      actions: [{ label: 'Atur di Profil', kind: 'primary', fn: () => { location.hash = 'profil'; setTimeout(() => $('#fCPhone').focus(), 300); } }, { label: 'Tutup', kind: 'ghost' }] });
+    return;
+  }
+  const tel = num.replace(/[^\d+]/g, '');
+  openModal({ title: `Hubungi ${s.contactName || 'Bidan / Faskes'}`,
+    body: `<div class="contact-box"><span class="contact-num">${esc(num)}</span><span class="muted">Jika tombol tidak terbuka, tekan lama nomor di atas untuk menyalin lalu telepon manual. Darurat: 119.</span></div>`,
+    actions: [{ label: 'Telepon', kind: 'danger', href: `tel:${tel}` }, { label: 'WhatsApp', kind: 'sage', href: `https://wa.me/${waNumber(num)}` }, { label: 'Salin nomor', kind: 'secondary', fn: () => { copyText(num); return true; } }] });
+}
+document.addEventListener('click', e => { if (e.target.closest('[data-contact]')){ e.preventDefault(); openContact(); } });
+
+/* ================= Profil & pengaturan ================= */
+const fields = { fName: 'motherName', fWeeks: 'weeks', fCName: 'contactName', fCPhone: 'contactPhone' };
+Object.entries(fields).forEach(([id, key]) => $('#' + id).addEventListener('input', e => { state.settings[key] = e.target.value; save(); renderTimer(); }));
+$('#sSound').addEventListener('change', e => { state.settings.sound = e.target.checked; save(); });
+$('#sVib').addEventListener('change', e => { state.settings.vibrate = e.target.checked; save(); });
+$('#sDark').addEventListener('change', e => { state.settings.dark = e.target.checked; save(); applyTheme(); });
+$('#themeBtn').addEventListener('click', () => { state.settings.dark = !state.settings.dark; save(); applyTheme(); renderProfile(); });
+$('#testFeedback').addEventListener('click', () => { chime(); buzz(); });
+$('#tipsClose').addEventListener('click', () => { state.tipsDismissed = true; save(); renderTimer(); });
+function renderProfile(){
+  Object.entries(fields).forEach(([id, key]) => { const el = $('#' + id); if (document.activeElement !== el) el.value = state.settings[key] || ''; });
+  $('#sSound').checked = !!state.settings.sound; $('#sVib').checked = !!state.settings.vibrate; $('#sDark').checked = !!state.settings.dark;
+}
+function applyTheme(){
+  const dark = !!state.settings.dark;
+  document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+  document.querySelector('meta[name="theme-color"]').content = dark ? '#231C1A' : '#FFF9F3';
+  $('#themeBtn').innerHTML = dark
+    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>'
+    : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>';
+  $('#themeBtn').setAttribute('aria-label', dark ? 'Mode terang' : 'Mode malam');
+  if (!$('#segChart').hidden) renderChart();
+}
+
+/* ================= Checklist Ayah ================= */
+const BAG = ['KTP, kartu BPJS/asuransi', 'Buku KIA (buku pink)', 'Baju ganti & kain/sarung Bunda', 'Pembalut nifas & pakaian dalam', 'Baju, popok, bedong & topi bayi', 'Air minum & camilan', 'Charger & power bank HP', 'Kendaraan & bensin siap', 'Uang tunai secukupnya', 'Nomor bidan/faskes tersimpan'];
+function renderBag(){
+  const done = BAG.filter((_, i) => state.checklist[i]).length;
+  $('#bag').innerHTML = BAG.map((t, i) => `<label><input type="checkbox" data-bag="${i}" ${state.checklist[i] ? 'checked' : ''}><span>${esc(t)}</span></label>`).join('');
+  $('#bagProg').style.width = (done / BAG.length * 100) + '%';
+  $('#bagCount').textContent = `${done} dari ${BAG.length} siap`;
+}
+$('#bag').addEventListener('change', e => { const i = e.target.dataset.bag; if (i == null) return; state.checklist[i] = e.target.checked; save(); renderBag(); });
+
+/* ================= Routing ================= */
+const VIEWS = ['beranda', 'timer', 'riwayat', 'edukasi', 'profil', 'ayah'];
+function route(){
+  let h = (location.hash || '').slice(1);
+  let scrollTo = null;
+  if (h === 'tanda-bahaya'){ scrollTo = 'tanda-bahaya'; h = 'edukasi'; }
+  if (!VIEWS.includes(h)) h = 'beranda';
+  VIEWS.forEach(v => $('#v-' + v).classList.toggle('active', v === h));
+  $$('.bnav a').forEach(a => a.classList.toggle('on', a.dataset.nav === h || (h === 'ayah' && a.dataset.nav === 'beranda')));
+  if (h === 'riwayat') renderHistory();
+  if (scrollTo) setTimeout(() => document.getElementById(scrollTo).scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
+  else window.scrollTo(0, 0);
+}
+window.addEventListener('hashchange', route);
+
+/* ================= Sinkron antartab & visibilitas ================= */
+window.addEventListener('storage', e => { if (e.key === LS_KEY){ state = load(); renderAll(); } });
+document.addEventListener('visibilitychange', () => { if (!document.hidden){ tick(); renderTimer(); } });
+
+/* ================= PWA ================= */
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; $('#installBtn').hidden = false; });
+$('#installBtn').addEventListener('click', async () => { if (!deferredPrompt) return; deferredPrompt.prompt(); try { await deferredPrompt.userChoice; } catch(e){} deferredPrompt = null; $('#installBtn').hidden = true; });
+try { if ('serviceWorker' in navigator && window.self === window.top && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {}); } catch(e){}
+
+/* ================= Init ================= */
+function renderAll(){ renderHome(); renderTimer(); renderNav(); renderHistory(); renderProfile(); renderBag(); }
+applyTheme(); renderAll(); route(); checkRecovery();
+setInterval(tick, 250);
+})();
+</script>
+</body>
+</html>

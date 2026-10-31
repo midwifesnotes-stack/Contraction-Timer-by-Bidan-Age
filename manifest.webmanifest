@@ -1,0 +1,15 @@
+{
+  "name": "Contraction Timer by Bidan Age",
+  "short_name": "Kontraksi",
+  "description": "Tenang, Catat, Pantau. Bidan Age Temani Persiapan Persalinanmu.",
+  "start_url": "./index.html#timer",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#FFF9F3",
+  "theme_color": "#B97883",
+  "lang": "id",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+  ]
+}
